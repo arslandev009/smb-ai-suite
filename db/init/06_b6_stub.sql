@@ -1,0 +1,6 @@
+-- B6 — AI Operations Manager (capstone)
+-- Schema intentionally not written yet — designed when this project is built,
+-- following B1 first (sequencing rule: build strictly in order, B2 depends on
+-- B1's retrieval pattern being proven out). Placeholder so the init order
+-- (00 -> 06) is already correct and adding a project later is just filling
+-- this file in, no renumbering.

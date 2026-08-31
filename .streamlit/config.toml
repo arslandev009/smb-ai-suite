@@ -1,0 +1,11 @@
+# Sets Streamlit's own accent color (buttons, pills, sliders, checkboxes, etc.)
+# to match our ink/amber design system. Without this, every default-styled
+# widget falls back to Streamlit's stock pink/red accent — that's what was
+# causing the "dirty" reddish underline on the old tab bar.
+[theme]
+base = "dark"
+primaryColor = "#e8a33d"
+backgroundColor = "#12141c"
+secondaryBackgroundColor = "#1a1d27"
+textColor = "#ededf0"
+font = "sans-serif"

@@ -1,0 +1,46 @@
+# The ONLY thing that runs in Docker for this whole suite: Postgres + pgvector.
+# hub_app.py, public_app.py, and every project's LangGraph code run natively on
+# the host (same reasoning as job-market-pipeline's dashboard: Streamlit needs
+# to shell out / connect directly, containerizing it buys nothing here).
+#
+# When B3 needs n8n, it gets added as a second service in THIS file — the
+# suite stays at one compose file no matter how many projects get added.
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: smb_ai_suite_postgres
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5434:5432"   # 5434 so it never collides with job-market-pipeline's postgres
+    volumes:
+      - suite_pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro   # every 0X_*.sql here runs in order on first boot
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # B3's Notification agent posts to an n8n webhook rather than hand-rolling
+  # email/Slack HTTP calls in Python — the visual, client-editable workflow
+  # IS part of the B3 deliverable (an SMB client can see and tweak the
+  # workflow themselves), not a shortcut around writing a Python request.
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: smb_ai_suite_n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_SECURE_COOKIE=false
+    volumes:
+      - suite_n8n_data:/home/node/.n8n
+
+volumes:
+  suite_pgdata:
+  suite_n8n_data:

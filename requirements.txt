@@ -1,0 +1,29 @@
+# One shared environment for the whole suite (hub_app.py + every project/ module).
+# Pure Python — no FastAPI, no Node, no separate service processes.
+
+# --- UI ---
+streamlit==1.62.0
+
+# --- Orchestration ---
+langgraph==1.2.11
+langchain-core==1.5.6
+
+# --- Database (same driver pattern as job-market-pipeline: psycopg2 + SQLAlchemy) ---
+sqlalchemy==2.0.52
+psycopg2-binary==2.9.10
+pgvector==0.5.0
+
+# --- HTTP (talks to llama.cpp) ---
+httpx==0.28.1
+tenacity==9.0.0
+
+# --- Document parsing (B1) ---
+pypdf==6.16.1
+python-docx==1.1.2
+
+# --- Utilities ---
+python-dotenv==1.0.1
+pandas==2.3.3
+
+# --- Web search (B2's Enrichment agent — free, no API key) ---
+ddgs==9.15.0
